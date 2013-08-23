@@ -1,22 +1,21 @@
-#!/usr/bin/env node
 'use strict'; /*jslint node: true, es5: true, indent: 2 */
-var util = require('util');
 
 // http://en.wikipedia.org/wiki/ANSI_escape_code
 var X = '\x1b';
-var FG = 30;
-var BG = 40;
-var COLORS = {
-  BLACK: 0,
-  RED: 1,
-  GREEN: 2,
-  YELLOW: 3,
-  BLUE: 4,
-  MAGENTA: 5,
-  CYAN: 6,
-  WHITE: 7,
-};
-var ANSI = {
+var FG_offset = 30;
+var BG_offset = 40;
+var COLORS = [
+  {offset: 0, name: 'BLACK'},
+  {offset: 1, name: 'RED'},
+  {offset: 2, name: 'GREEN'},
+  {offset: 3, name: 'YELLOW'},
+  {offset: 4, name: 'BLUE'},
+  {offset: 5, name: 'MAGENTA'},
+  {offset: 6, name: 'CYAN'},
+  {offset: 7, name: 'WHITE'},
+];
+
+var ANSI = exports.ANSI = {
   RESET: X+'[0m',
   BOLD: X+'[1m',
   FAINT: X+'[2m',
@@ -30,12 +29,13 @@ var ANSI = {
   FG: {},
   BG: {},
 };
-for (var key in COLORS) {
-  ANSI.FG[key] = X + '[' + (FG + COLORS[key]) + 'm';
-  ANSI.BG[key] = X + '[' + (BG + COLORS[key]) + 'm';
-}
 
-var literals = {
+COLORS.forEach(function(color) {
+  ANSI.FG[color.name] = X + '[' + (FG_offset + color.offset) + 'm';
+  ANSI.BG[color.name] = X + '[' + (BG_offset + color.offset) + 'm';
+});
+
+var literals = exports.literals = {
   0: '\\0',
   1: 'SOH',
   2: 'STX',
@@ -72,37 +72,21 @@ var literals = {
   133: 'NEL',
 };
 
-function printBuffer(buffer) {
+var printBuffer = exports.printBuffer = function(buffer, stream) {
   for (var i = 0, l = buffer.length; i < l; i++) {
     var byte = buffer[i];
     // these are just the ascii invisibles.
     // todo: consider all utf8 visibles
     if (byte > 33 && byte < 127) {
-      process.stdout.write(buffer.slice(i, i+1));
+      stream.write(buffer.slice(i, i+1));
     }
     else {
-      process.stdout.write(ANSI.INVERT);
+      stream.write(ANSI.INVERT);
       if (literals[byte]) {
-        process.stdout.write(literals[byte]);
+        stream.write(literals[byte]);
       }
-      process.stdout.write(buffer.slice(i, i+1));
-      process.stdout.write(ANSI.RESET);
+      stream.write(buffer.slice(i, i+1));
+      stream.write(ANSI.RESET);
     }
   }
-}
-
-process.stdin.on('readable', function() {
-  var chunk = process.stdin.read();
-  printBuffer(chunk);
-});
-
-process.stdin.on('end', function() {
-  process.stdout.write('\n');
-  process.exit();
-});
-
-process.on('SIGINT', function() {
-  process.stdin.pause();
-  process.stdout.write('\n');
-  process.exit(1);
-});
+};

@@ -1,8 +1,8 @@
 {
-  "name": "vcat",
+  "name": "visible",
   "version": "0.0.1",
-  "description": "Print the whitespace and non-ASCII characters in a stream.",
-  "homepage": "https://github.com/chbrown/vcat",
+  "description": "Print whitespace and non-ASCII characters in a stream, like cat -v.",
+  "homepage": "https://github.com/chbrown/visible",
   "keywords": [
     "visual",
     "cat",
@@ -11,12 +11,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/chbrown/vcat.git"
+    "url": "git://github.com/chbrown/visible.git"
   },
   "author": "Christopher Brown <io@henrian.com>",
   "license": "MIT",
   "bin": {
-    "vcat": "index.js"
-  },
-  "main": "index.js"
+    "vcat": "bin/vcat.js"
+  }
 }
