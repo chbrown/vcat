@@ -56,3 +56,9 @@ process.on('SIGINT', function() {
 
   process.exit('SIGINT');
 });
+
+output.on('error', function(err) {
+  // e.g., if we pipe into head or something
+  visible.resetStream(process.stderr);
+  process.exit();
+});
