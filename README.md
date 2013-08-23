@@ -1,6 +1,8 @@
-# Visual cat
+# Visible
 
-Highlight whitespace and escape non-ASCII characters in a bytestream, i.e., STDIN.
+Highlight whitespace and escape non-ASCII characters in buffers, bytestreams, etc.
+
+    npm install -g visible
 
 ## E.g.:
 
