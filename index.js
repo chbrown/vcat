@@ -72,21 +72,6 @@ var literals = exports.literals = {
   133: 'NEL',
 };
 
-var printBuffer = exports.printBuffer = function(buffer, stream) {
-  for (var i = 0, l = buffer.length; i < l; i++) {
-    var byte = buffer[i];
-    // these are just the ascii invisibles.
-    // todo: consider all utf8 visibles
-    if (byte > 33 && byte < 127) {
-      stream.write(buffer.slice(i, i+1));
-    }
-    else {
-      stream.write(ANSI.INVERT);
-      if (literals[byte]) {
-        stream.write(literals[byte]);
-      }
-      stream.write(buffer.slice(i, i+1));
-      stream.write(ANSI.RESET);
-    }
-  }
+var resetStream = exports.resetStream = function(stream) {
+  stream.write(ANSI.RESET);
 };
