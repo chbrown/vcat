@@ -22,7 +22,12 @@ function print(buffer) {
       if (visible.literals[character]) {
         output.write(visible.literals[character]);
       }
-      output.write(buffer.slice(i, i+1));
+      if (character == 13) {
+        // we only literally print characters that don't obscure other characters
+      }
+      else {
+        output.write(buffer.slice(i, i+1));
+      }
       output.write(visible.ANSI.RESET);
     }
   }
