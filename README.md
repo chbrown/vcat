@@ -11,4 +11,4 @@ Highlight whitespace and escape non-ASCII characters in buffers, bytestreams, et
 
 ## License
 
-Copyright © 2013 Christopher Brown. [MIT Licensed](LICENSE).
+Copyright 2013-2015 Christopher Brown. [MIT Licensed](http://opensource.org/licenses/MIT).
