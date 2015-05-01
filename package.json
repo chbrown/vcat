@@ -1,7 +1,7 @@
 {
   "name": "visible",
   "version": "0.1.0",
-  "description": "Print whitespace and non-ASCII characters in a stream. Like cat -v.",
+  "description": "Print whitespace and non-ASCII characters in a stream. Like vis or cat -v.",
   "keywords": [
     "visual",
     "cat",
@@ -11,20 +11,16 @@
     "highlight"
   ],
   "homepage": "https://github.com/chbrown/visible",
-  "bugs": {
-    "url": "https://github.com/chbrown/visible/issues",
-    "email": "Christopher Brown <io@henrian.com>"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/chbrown/visible.git"
-  },
+  "repository": "git://github.com/chbrown/visible.git",
   "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
   "license": "MIT",
   "bin": {
-    "vcat": "bin/vcat.js"
+    "visible": "bin/visible"
   },
   "dependencies": {
-    "optimist": "*"
+    "yargs": "*"
+  },
+  "devDependencies": {
+    "typescript": "*"
   }
 }

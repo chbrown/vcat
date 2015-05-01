@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+var visible = require('..');
+
+var yargs = require('yargs')
+  .describe({
+    help: 'print this help message',
+    version: 'print version',
+  })
+  .boolean(['help', 'version'])
+  .alias({
+    version: 'v'
+  });
+
+var argv = yargs.argv;
+
+if (argv.help) {
+  yargs.showHelp();
+  process.exit(1);
+}
+else if (argv.version) {
+  console.log(require('../package').version);
+}
+else {
+  var escaper = new visible.Escaper({
+    escapeSlash: true, // default: false
+    // literalVisibles: false, // default: true
+    useBackslashEscapes: true,
+    // literalEOL: false,
+    // literalSpace: true,
+    // base: 'ubrace',
+  });
+  var streamTransform = escaper.createStream();
+  process.stdin.pipe(streamTransform).pipe(process.stdout);
+
+  process.on('SIGINT', function() {
+    process.stdin.unpipe(streamTransform);
+    streamTransform.push('SIGINT');
+    process.exit('SIGINT');
+  });
+
+  process.stdout.on('error', function() {
+    // e.g., if we pipe into head or something
+    process.exit(1);
+  });
+}
