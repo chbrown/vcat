@@ -1,6 +1,6 @@
 /// <reference path="../../type_declarations/DefinitelyTyped/node/node.d.ts" />
-import stream = require('stream');
 declare module "visible" {
+    import stream = require('stream');
     /**
     Options:
     
