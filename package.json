@@ -22,5 +22,6 @@
   },
   "devDependencies": {
     "typescript": "*"
-  }
+  },
+  "typings": "visible.d.ts"
 }

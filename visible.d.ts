@@ -1,6 +1,5 @@
 /// <reference path="../../type_declarations/DefinitelyTyped/node/node.d.ts" />
 declare module "visible" {
-    import stream = require('stream');
     /**
     Options:
     
@@ -29,9 +28,6 @@ declare module "visible" {
         /**
         */
         transformCharCode(charCode: number): string;
-        createStream(): stream.Transform;
-        private _transform(chunk, encoding, cb);
-        private _flush(cb);
         /**
         Never modify the given `value`!
         */

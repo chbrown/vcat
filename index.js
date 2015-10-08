@@ -1,5 +1,4 @@
 /// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-var stream = require('stream');
 //// export module visible {
 function padLeft(str, padding, length) {
     while (str.length < length) {
@@ -182,20 +181,6 @@ var Escaper = (function () {
             return '\\u{' + charCode_hexadecimal + '}';
         }
         return '\\u' + padLeft(charCode_hexadecimal, '0', 4);
-    };
-    Escaper.prototype.createStream = function () {
-        var transform = new stream.Transform({ decodeStrings: true, objectMode: true });
-        transform._transform = this._transform.bind(this);
-        transform._flush = this._flush.bind(this);
-        return transform;
-    };
-    Escaper.prototype._transform = function (chunk, encoding, cb) {
-        // `encoding` === 'buffer'
-        var string = this.transformBuffer(chunk);
-        cb(null, string);
-    };
-    Escaper.prototype._flush = function (cb) {
-        cb(null, 'EOF'); // + os.EOL
     };
     /**
     Never modify the given `value`!

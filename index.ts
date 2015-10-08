@@ -1,5 +1,4 @@
 /// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-import stream = require('stream');
 
 //// export module visible {
 
@@ -15,7 +14,7 @@ function padLeft(str, padding, length) {
 
 http://en.wikipedia.org/wiki/ANSI_escape_code
 */
-var ansi = {
+const ansi = {
   RESET:         '\x1b[0m',
   // styles
   BOLD:          '\x1b[1m',
@@ -47,8 +46,7 @@ var ansi = {
   BG_WHITE:      '\x1b[47m',
 };
 
-
-var controlCharacterNames = {
+const controlCharacterNames = {
   // 0x00 through 0x0F
    0: 'NUL',
    1: 'SOH',
@@ -91,7 +89,7 @@ var controlCharacterNames = {
   133: 'NEL',
 };
 
-var backslashEscapes = {
+const backslashEscapes = {
    0: '\\0',
    8: '\\b',
    9: '\\t',
@@ -184,20 +182,7 @@ export class Escaper {
     }
     return '\\u' + padLeft(charCode_hexadecimal, '0', 4);
   }
-  createStream(): stream.Transform {
-    var transform = new stream.Transform({decodeStrings: true, objectMode: true});
-    transform._transform = this._transform.bind(this);
-    transform._flush = this._flush.bind(this);
-    return transform;
-  }
-  private _transform(chunk, encoding, cb): void {
-    // `encoding` === 'buffer'
-    var string = this.transformBuffer(chunk);
-    cb(null, string);
-  }
-  private _flush(cb): void {
-    cb(null, 'EOF'); // + os.EOL
-  }
+
   /**
   Never modify the given `value`!
   */
