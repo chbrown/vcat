@@ -1,5 +1,3 @@
-/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-//// export module visible {
 function padLeft(str, padding, length) {
     while (str.length < length) {
         str = padding + str;
@@ -93,46 +91,27 @@ var backslashEscapes = {
     12: '\\f',
     13: '\\r',
 };
-/**
-Options:
-
-* `escapeSlash: boolean = false`: Escape backslashes ("\").
-* `literalVisibles: boolean = true`: Use the literal character for the simple
-  characters, like "A", "^" or "~"
-* `literalEOL: boolean = true`: Preserve literal newlines ("\n") (but not
-  carriage returns, i.e., "\r").
-* `literalSpace: boolean = true`: Preserve literal spaces (" ").
-* `useControlCharacterNames: boolean = false`: Use names for control characters,
-  e.g., "NL", or "SP", etc.
-* `useBackslashEscapes: boolean = false`: Use escapes for "\0", "\b", "\t",
-  "\n", "\v", "\f", and "\r".
-* `base: 'octal' | 'hexadecimal' | 'unicode' | 'ubrace' = 'hexadecimal'`:
-  how to format the escaped characters. 'octal' and 'hexadecimal' can only be
-  applied to character codes from 0 to 255.
-
-The options are processed (and applicable) in pretty much that order.
-*/
+var defaultOptions = {
+    escapeSlash: false,
+    literalVisibles: true,
+    literalEOL: true,
+    literalSpace: true,
+    useControlCharacterNames: false,
+    useBackslashEscapes: false,
+    base: 'hexadecimal',
+};
 var Escaper = (function () {
     function Escaper(options) {
-        if (options === undefined)
-            options = {};
-        if (options.escapeSlash === undefined)
-            options.escapeSlash = false;
-        if (options.literalVisibles === undefined)
-            options.literalVisibles = true;
-        if (options.literalEOL === undefined)
-            options.literalEOL = true;
-        if (options.literalSpace === undefined)
-            options.literalSpace = true;
-        if (options.useControlCharacterNames === undefined)
-            options.useControlCharacterNames = false;
-        if (options.useBackslashEscapes === undefined)
-            options.useBackslashEscapes = false;
-        if (options.base === undefined)
-            options.base = 'hexadecimal';
+        if (options === void 0) { options = defaultOptions; }
         this.options = options;
+        for (var key in defaultOptions) {
+            if (options[key] === undefined) {
+                options[key] = defaultOptions[key];
+            }
+        }
     }
     /**
+    Escape a Buffer.
     */
     Escaper.prototype.transformBuffer = function (buffer) {
         var strings = [];
@@ -144,6 +123,7 @@ var Escaper = (function () {
         return strings.join('');
     };
     /**
+    Escape a numeric character code.
     */
     Escaper.prototype.transformCharCode = function (charCode) {
         if (this.options.escapeSlash && charCode == 92) {
@@ -236,4 +216,3 @@ var Escaper = (function () {
     return Escaper;
 })();
 exports.Escaper = Escaper;
-//// }

@@ -21,7 +21,6 @@
     "yargs": "*"
   },
   "devDependencies": {
-    "typescript": "*"
-  },
-  "typings": "visible.d.ts"
+    "typescript": "next"
+  }
 }

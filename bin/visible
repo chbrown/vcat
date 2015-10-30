@@ -2,15 +2,52 @@
 var visible = require('..');
 var stream = require('stream');
 
-var yargs = require('yargs')
-  .describe({
-    help: 'print this help message',
-    version: 'print version',
-  })
-  .boolean(['help', 'version'])
-  .alias({
-    version: 'v'
-  });
+var yargs = require('yargs').options({
+  help: {
+    describe: 'print this help message',
+    type: 'boolean',
+  },
+  version: {
+    describe: 'print version',
+    type: 'boolean',
+    alias: 'v',
+  },
+  escapeSlash: {
+    describe: 'Escape backslashes?',
+    type: 'boolean',
+    default: false,
+  },
+  literalVisibles: {
+    describe: 'Use the literal character for simple characters?',
+    type: 'boolean',
+    default: true,
+  },
+  literalEOL: {
+    describe: 'Preserve literal newlines?',
+    type: 'boolean',
+    default: true,
+  },
+  literalSpace: {
+    describe: 'Preserve literal spaces?',
+    type: 'boolean',
+    default: true,
+  },
+  useControlCharacterNames: {
+    describe: 'Use names for control characters?',
+    type: 'boolean',
+    default: false,
+  },
+  useBackslashEscapes: {
+    describe: 'Use escapes for common ASCII control characters?',
+    type: 'boolean',
+    default: false,
+  },
+  base: {
+    describe: 'How to format escaped characters?',
+    type: 'string',
+    default: 'hexadecimal',
+  },
+});
 
 function createStream(escaper) {
   var transform = new stream.Transform({decodeStrings: true, objectMode: true});
@@ -35,14 +72,7 @@ else if (argv.version) {
   console.log(require('../package').version);
 }
 else {
-  var escaper = new visible.Escaper({
-    escapeSlash: true, // default: false
-    // literalVisibles: false, // default: true
-    useBackslashEscapes: true,
-    // literalEOL: false,
-    // literalSpace: true,
-    // base: 'ubrace',
-  });
+  var escaper = new visible.Escaper(argv);
   var streamTransform = createStream(escaper);
   process.stdin.pipe(streamTransform).pipe(process.stdout);
 

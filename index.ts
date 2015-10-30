@@ -1,7 +1,3 @@
-/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-
-//// export module visible {
-
 function padLeft(str, padding, length) {
   while (str.length < length) {
     str = padding + str;
@@ -99,40 +95,47 @@ const backslashEscapes = {
   13: '\\r',
 };
 
-/**
-Options:
+// The options are processed (and applicable) in pretty much the following order:
+export interface EscaperOptions {
+  /** Escape backslashes ("\")? (default: false) */
+  escapeSlash: boolean;
+  /** Use the literal character for simple characters, like "A", "^" or "~"? (default: true) */
+  literalVisibles: boolean;
+  /** Preserve literal newlines ("\n") (but not carriage returns, i.e., "\r")? (default: true) */
+  literalEOL: boolean;
+  /** Preserve literal spaces (" ")? (default: true) */
+  literalSpace: boolean;
+  /** Use names for control characters, e.g., "NL", or "SP", etc? (default: false) */
+  useControlCharacterNames: boolean;
+  /** Use escapes for "\0", "\b", "\t", "\n", "\v", "\f", and "\r"? (default: false) */
+  useBackslashEscapes: boolean;
+  /** How to format escaped characters? Options: 'octal' | 'hexadecimal' | 'unicode' | 'ubrace'.
+    'octal' and 'hexadecimal' can only be applied to character codes from 0 to 255.
+    (default: 'hexadecimal') */
+  base: string;
+}
 
-* `escapeSlash: boolean = false`: Escape backslashes ("\").
-* `literalVisibles: boolean = true`: Use the literal character for the simple
-  characters, like "A", "^" or "~"
-* `literalEOL: boolean = true`: Preserve literal newlines ("\n") (but not
-  carriage returns, i.e., "\r").
-* `literalSpace: boolean = true`: Preserve literal spaces (" ").
-* `useControlCharacterNames: boolean = false`: Use names for control characters,
-  e.g., "NL", or "SP", etc.
-* `useBackslashEscapes: boolean = false`: Use escapes for "\0", "\b", "\t",
-  "\n", "\v", "\f", and "\r".
-* `base: 'octal' | 'hexadecimal' | 'unicode' | 'ubrace' = 'hexadecimal'`:
-  how to format the escaped characters. 'octal' and 'hexadecimal' can only be
-  applied to character codes from 0 to 255.
+const defaultOptions: EscaperOptions = {
+  escapeSlash: false,
+  literalVisibles: true,
+  literalEOL: true,
+  literalSpace: true,
+  useControlCharacterNames: false,
+  useBackslashEscapes: false,
+  base: 'hexadecimal',
+};
 
-The options are processed (and applicable) in pretty much that order.
-*/
 export class Escaper {
-  options: any;
-
-  constructor(options: any) {
-    if (options === undefined) options = {};
-    if (options.escapeSlash === undefined) options.escapeSlash = false;
-    if (options.literalVisibles === undefined) options.literalVisibles = true;
-    if (options.literalEOL === undefined) options.literalEOL = true;
-    if (options.literalSpace === undefined) options.literalSpace = true;
-    if (options.useControlCharacterNames === undefined) options.useControlCharacterNames = false;
-    if (options.useBackslashEscapes === undefined) options.useBackslashEscapes = false;
-    if (options.base === undefined) options.base = 'hexadecimal';
-    this.options = options;
+  constructor(public options: EscaperOptions = defaultOptions) {
+    for (let key in defaultOptions) {
+      if (options[key] === undefined) {
+        options[key] = defaultOptions[key];
+      }
+    }
   }
+
   /**
+  Escape a Buffer.
   */
   transformBuffer(buffer: Buffer): string {
     var strings = [];
@@ -143,7 +146,9 @@ export class Escaper {
     }
     return strings.join('');
   }
+
   /**
+  Escape a numeric character code.
   */
   transformCharCode(charCode: number): string {
     if (this.options.escapeSlash && charCode == 92) {
@@ -233,5 +238,3 @@ export class Escaper {
     return value;
   }
 }
-
-//// }
