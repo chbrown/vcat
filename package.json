@@ -1,6 +1,6 @@
 {
   "name": "visible",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Print whitespace and non-ASCII characters in a stream. Like vis or cat -v.",
   "keywords": [
     "visual",
