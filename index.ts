@@ -5,43 +5,6 @@ function padLeft(str, padding, length) {
   return str;
 }
 
-/**
-'\x1b' == '\033' == '\u001b'
-
-http://en.wikipedia.org/wiki/ANSI_escape_code
-*/
-const ansi = {
-  RESET:         '\x1b[0m',
-  // styles
-  BOLD:          '\x1b[1m',
-  FAINT:         '\x1b[2m',
-  ITALIC:        '\x1b[3m',
-  UNDERLINE:     '\x1b[4m',
-  BLINK1:        '\x1b[5m',
-  BLINK2:        '\x1b[6m',
-  INVERT:        '\x1b[7m',
-  CONCEAL:       '\x1b[8m',
-  STRIKETHROUGH: '\x1b[9m',
-  // foreground
-  FG_BLACK:      '\x1b[30m',
-  FG_RED:        '\x1b[31m',
-  FG_GREEN:      '\x1b[32m',
-  FG_YELLOW:     '\x1b[33m',
-  FG_BLUE:       '\x1b[34m',
-  FG_MAGENTA:    '\x1b[35m',
-  FG_CYAN:       '\x1b[36m',
-  FG_WHITE:      '\x1b[37m',
-  // background
-  BG_BLACK:      '\x1b[40m',
-  BG_RED:        '\x1b[41m',
-  BG_GREEN:      '\x1b[42m',
-  BG_YELLOW:     '\x1b[43m',
-  BG_BLUE:       '\x1b[44m',
-  BG_MAGENTA:    '\x1b[45m',
-  BG_CYAN:       '\x1b[46m',
-  BG_WHITE:      '\x1b[47m',
-};
-
 const controlCharacterNames = {
   // 0x00 through 0x0F
    0: 'NUL',
@@ -98,40 +61,35 @@ const backslashEscapes = {
 // The options are processed (and applicable) in pretty much the following order:
 export interface EscaperOptions {
   /** Escape backslashes ("\")? (default: false) */
-  escapeSlash: boolean;
+  escapeSlash?: boolean;
   /** Use the literal character for simple characters, like "A", "^" or "~"? (default: true) */
-  literalVisibles: boolean;
+  literalVisibles?: boolean;
   /** Preserve literal newlines ("\n") (but not carriage returns, i.e., "\r")? (default: true) */
-  literalEOL: boolean;
+  literalEOL?: boolean;
   /** Preserve literal spaces (" ")? (default: true) */
-  literalSpace: boolean;
+  literalSpace?: boolean;
   /** Use names for control characters, e.g., "NL", or "SP", etc? (default: false) */
-  useControlCharacterNames: boolean;
+  useControlCharacterNames?: boolean;
   /** Use escapes for "\0", "\b", "\t", "\n", "\v", "\f", and "\r"? (default: false) */
-  useBackslashEscapes: boolean;
+  useBackslashEscapes?: boolean;
   /** How to format escaped characters? Options: 'octal' | 'hexadecimal' | 'unicode' | 'ubrace'.
     'octal' and 'hexadecimal' can only be applied to character codes from 0 to 255.
     (default: 'hexadecimal') */
-  base: string;
+  base?: string;
 }
 
-const defaultOptions: EscaperOptions = {
-  escapeSlash: false,
-  literalVisibles: true,
-  literalEOL: true,
-  literalSpace: true,
-  useControlCharacterNames: false,
-  useBackslashEscapes: false,
-  base: 'hexadecimal',
-};
-
 export class Escaper {
-  constructor(public options: EscaperOptions = defaultOptions) {
-    for (let key in defaultOptions) {
-      if (options[key] === undefined) {
-        options[key] = defaultOptions[key];
-      }
-    }
+  options: EscaperOptions;
+  constructor({
+                escapeSlash = false,
+                literalVisibles = true,
+                literalEOL = true,
+                literalSpace = true,
+                useControlCharacterNames = false,
+                useBackslashEscapes = false,
+                base = 'hexadecimal'
+              }: EscaperOptions) {
+    this.options = {escapeSlash, literalVisibles, literalEOL, literalSpace, useControlCharacterNames, useBackslashEscapes, base};
   }
 
   /**
