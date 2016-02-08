@@ -26,5 +26,8 @@
   },
   "bin": {
     "visible": "bin/visible"
+  },
+  "scripts": {
+    "prepublish": "make"
   }
 }
