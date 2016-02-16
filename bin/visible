@@ -2,7 +2,7 @@
 var visible = require('..');
 var stream = require('stream');
 
-var yargs = require('yargs').options({
+var argvparser = require('optimist').options({
   help: {
     describe: 'print this help message',
     type: 'boolean',
@@ -62,10 +62,10 @@ function createStream(escaper) {
   return transform;
 }
 
-var argv = yargs.argv;
+var argv = argvparser.argv;
 
 if (argv.help) {
-  yargs.showHelp();
+  argvparser.showHelp();
   process.exit(1);
 }
 else if (argv.version) {
