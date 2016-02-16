@@ -1,5 +1,7 @@
 # Visible
 
+[![npm version](https://badge.fury.io/js/visible.svg)](https://www.npmjs.com/package/visible)
+
 Highlight whitespace and escape non-ASCII characters in buffers, bytestreams, etc. Like `cat -v`, or `vis`, but with different options.
 
 **Install globally**:
